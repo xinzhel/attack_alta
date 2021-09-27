@@ -1,0 +1,22 @@
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==1.9.0+cu111
+checklist==0.0.11
+jsonnet==0.17.0
+numpy==1.21.0
+overrides==3.1.0
+scikit-learn==0.24.2
+scipy==1.7.0
+sentencepiece==0.1.96
+spacy==3.0.7
+torchvision==0.10.0
+tqdm==4.49.0
+transformers==4.7.0
+boto3==1.18.5
+google-cloud-storage==1.41.1
+lmdb==1.2.1
+h5py==3.3.0
+wandb==0.11.0
+tensorboardX==2.4
+termcolor==1.1.0
+
+

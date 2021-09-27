@@ -1,0 +1,59 @@
+{
+  "dataset_reader": {
+    "type": "yelp",
+    "token_indexers": {
+      "tokens": {
+        "type": "single_id"
+      }
+    },
+    "tokenizer": {
+      "type": "spacy"
+    },
+    "manual_multiprocess_sharding": true,
+    "manual_distributed_sharding": true
+  
+  },
+  "train_data_path": "train",
+    "model": {
+      "type": "sst_classifier",
+      "text_field_embedder": {
+        "token_embedders": {
+          "tokens": {
+            "type": "embedding",
+            "embedding_dim": 300,
+            "trainable": true
+          }
+        }
+      },
+      "encoder": {
+        "type": "lstm", 
+        "input_size": 300,
+        "hidden_size": 512,
+        "num_layers": 2
+      }
+    },
+  
+    "data_loader": {
+      "type": "multiprocess",
+      "batch_size": 64,
+      "shuffle": true
+    },
+  
+    "validation_data_loader": {
+      "type": "multiprocess",
+      "batch_size": 64,
+      "shuffle": true
+    },
+  
+    "trainer": {
+      "num_epochs": 1,
+      "patience": 1,
+      "cuda_device": 0,
+      "grad_clipping": 5.0,
+      "validation_metric": "+accuracy",
+      "optimizer": {
+        "type": "adam"
+      },
+    }
+  }
+  

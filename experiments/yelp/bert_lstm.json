@@ -1,0 +1,63 @@
+{
+    "dataset_reader": {
+      "type": "yelp",
+      "token_indexers": {
+        "tokens": {
+          "type": "pretrained_transformer",
+          "model_name": "bert-base-cased"
+        }
+      },
+      "tokenizer": {
+          "type": "pretrained_transformer",
+          "model_name": "bert-base-cased",
+          "max_length": 512
+      },
+      "manual_multiprocess_sharding": true,
+      "manual_distributed_sharding": true
+    },
+    "train_data_path": "train",
+    "model": {
+      "type": "sst_classifier",
+      "remove_cls": true,
+      "text_field_embedder": {
+        "token_embedders": {
+          "tokens": {
+            "type": "pretrained_transformer",
+            "model_name":  "bert-base-cased",
+            "train_parameters": false
+          }
+        }
+      },
+  
+      "encoder": {
+        "type": "lstm", 
+        "input_size": 768,
+        "hidden_size": 512,
+        "num_layers": 2
+      
+      }
+    },
+  
+    "data_loader": {
+      "batch_size": 16,
+      "shuffle": true
+    },
+  
+    "validation_data_loader": {
+      "batch_size": 64,
+      "shuffle": true
+    },
+  
+    "trainer": {
+      "num_epochs": 1,
+      "patience": 1,
+      "grad_clipping": 5.0,
+      "validation_metric": "+accuracy",
+      "optimizer": {
+        "type": "adamw",
+        "lr": 5e-5 
+      },
+    },
+    "distributed": {"cuda_devices": [0, 1, 2, 3, 4, 5, 6, 7] }
+}
+  

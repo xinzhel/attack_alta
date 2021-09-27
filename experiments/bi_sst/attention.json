@@ -1,0 +1,54 @@
+{
+    "dataset_reader": {
+      "type": "sst_tokens",
+      "token_indexers": {
+        "tokens": {
+          "type": "single_id"
+        }
+      },
+      "granularity": "2-class"
+    },
+    "train_data_path": "https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/train.txt",
+    "validation_data_path": "https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/dev.txt",
+    "model": {
+      "type": "sst_classifier",
+      "text_field_embedder": {
+        "token_embedders": {
+          "tokens": {
+            "type": "embedding",
+            "embedding_dim": 300,
+            "trainable": true
+          }
+        }
+      },
+      "encoder": {
+        "type": "self_attention", 
+        "embedding_dim": 300,
+        "num_heads": 5
+      }
+    },
+  
+    "data_loader": {
+      "type": "multiprocess",
+      "batch_size": 64,
+      "shuffle": true
+    },
+  
+    "validation_data_loader": {
+      "type": "multiprocess",
+      "batch_size": 64,
+      "shuffle": true
+    },
+  
+    "trainer": {
+      "num_epochs": 30,
+      "patience": 3,
+      "cuda_device": 0,
+      "grad_clipping": 5.0,
+      "validation_metric": "+accuracy",
+      "optimizer": {
+        "type": "adam"
+      }
+    }
+  }
+  
