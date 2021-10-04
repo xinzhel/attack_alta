@@ -4,7 +4,7 @@
 cd ../../
 task='yelp'
 for model_type in bert_cnn bert_attention  lstm ft_cnn ft_lstm ft_attention glove_cnn glove_lstm glove_attention; do
-	if [ -e /data/zhanghe/xinzhe/attack/experiments/yelp/${model_type}.json ]; then
+	if [ -e /data/zhanghe/xinzhe/attack/experiments/${task}/${model_type}.json ]; then
 	       	echo "${model_type} exist."
 			train_config_path=experiments/${task}/${model_type}.json
 			serialization_dir=models/${task}/${model_type}

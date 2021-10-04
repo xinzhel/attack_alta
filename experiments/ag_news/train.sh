@@ -3,7 +3,7 @@
 # command line arguments
 cd ../../
 task='ag_news'
-for model_type in lstm attention bert_lstm bert_cnn bert_attention ft_lstm ft_cnn ft_attention glove_lstm glove_cnn glove_attention; do
+for model_type in  bert_lstm bert_cnn bert_attention ft_lstm ft_cnn ft_attention glove_lstm glove_cnn glove_attention; do
 	if [ -e /home/xinzhel/git_repo/attack/experiments/ag_news/${model_type}.json ]; then
 	       	echo "${model_type} exist."
 			train_config_path=experiments/${task}/${model_type}.json

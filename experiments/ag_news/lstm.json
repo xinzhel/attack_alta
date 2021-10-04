@@ -44,7 +44,7 @@
     },
   
     "trainer": {
-      "num_epochs": 5,
+      "num_epochs": 2,
       "patience": 3,
       "cuda_device": 0,
       "grad_clipping": 5.0,

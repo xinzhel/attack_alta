@@ -12,7 +12,7 @@ from attack_utils.model_util import load_local_archive, filter_instance_by_label
 from attack_utils.universal_attack import UniversalAttack
 
 
-def attack(task, model_type, trigger_tokens,  num_epoch=4, vocab_namespace='tokens',  
+def attack(task, model_type, trigger_tokens, targeted_class=None, num_epoch=4, vocab_namespace='tokens',  
     sst_granularity=2, min_length=10, 
     universal_perturb_batch_size=128, 
     distributed=False, first_cls=False, 
@@ -24,7 +24,7 @@ def attack(task, model_type, trigger_tokens,  num_epoch=4, vocab_namespace='toke
     # load model
     model = load_local_archive(dir='models/', task=task, model_type=model_type)
     model.to(device=torch.device('cuda:0'))
-    # load 1280 test_data, 872 dev data
+    # load test_data, attack data
     if task == 'bi_sst':
         # 1280 filtered from 1821 test_data
         dataloader_test = load_data(task, 'test', pretrained_transformer=pretrained_transformer, distributed=distributed)
@@ -50,7 +50,11 @@ def attack(task, model_type, trigger_tokens,  num_epoch=4, vocab_namespace='toke
         test_data = list(itertools.islice(data_iterator, 0, 960))
 
     test_data = filter_instances_by_prediction(test_data, model)
-    LABELS = list(model.vocab._token_to_index['labels'].keys())
+
+    if targeted_class is None:
+        LABELS = list(model.vocab._token_to_index['labels'].keys())
+    else:
+        LABELS = [targeted_class]
         
     for target_label in LABELS:
         attack_data_c = filter_instance_by_label(attack_data, label_filter=target_label, exclude=True)
@@ -111,6 +115,7 @@ def attack(task, model_type, trigger_tokens,  num_epoch=4, vocab_namespace='toke
                 
             }
         )
+        print('Save to ', file_name)
         result_df.to_csv(file_name)
             
 def parse_args():
@@ -119,7 +124,7 @@ def parse_args():
     parser.add_argument(
         "--model-type", 
         type=str, 
-        default='glove_lstm',
+        default='lstm',
         # required=True,
         help="path to the victim model"
     )
@@ -135,7 +140,7 @@ def parse_args():
     parser.add_argument(
         "--one-example",
         action="store_true",
-        default=False,
+        default=True,
         help="",
     )
 
@@ -144,9 +149,14 @@ def parse_args():
     parser.add_argument(
         "--task", 
         type=str, 
-        default='bi_sst',
-        # required=True,
-        help="path to the victim model"
+        default='ag_news',
+    )
+
+    parser.add_argument(
+        "--targeted-class", 
+        type=str, 
+        default=None,
+    
     )
 
     parser.add_argument(
@@ -201,6 +211,9 @@ if __name__ == "__main__":
     
     trigger_tokens = '{the} {the} {the}'
 
+    if args.task == "ag_news":
+        args.targeted_class = '3'
+
     if args.num_epoch is None:
         args.num_epoch = 10 if args.one_example else 1
 
@@ -208,22 +221,25 @@ if __name__ == "__main__":
     if 'bert' in args.model_type:
         args.pretrained_transformer = 'bert-base-cased'
 
-    universal_perturb_batch_size=128
-    if args.task == 'imdb' or args.task == 'yelp':
-        # distributed = True
-        universal_perturb_batch_size=8
-
     vocab_namespace = 'tokens'
     first_cls = False
     if args.pretrained_transformer:
         vocab_namespace = 'tags'
         first_cls = True
+
+    universal_perturb_batch_size=128
+    if args.task == 'imdb' or args.task == 'yelp':
+        # distributed = True
+        universal_perturb_batch_size=8
+
     
     
+    print(args.mode)
     attack(args.task, args.model_type,
         num_epoch=args.num_epoch, 
         vocab_namespace=vocab_namespace, 
         trigger_tokens=trigger_tokens, 
+        targeted_class=args.targeted_class,
         universal_perturb_batch_size=universal_perturb_batch_size, 
         distributed=args.distributed,
         first_cls= first_cls,

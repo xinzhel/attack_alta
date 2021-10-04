@@ -1,6 +1,6 @@
 {
     "dataset_reader": {
-      "type": "sst_tokens",
+      "type": "text_classification_json",
       "token_indexers": {
         "tokens": {
           "type": "pretrained_transformer",
@@ -11,10 +11,9 @@
           "type": "pretrained_transformer",
           "model_name": "bert-base-cased"
       },
-      "granularity": "2-class"
     },
-    "train_data_path": "https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/train.txt",
-    "validation_data_path": "https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/dev.txt",
+    "train_data_path": "data/ag_news/train.json",
+    "validation_data_path": "data/ag_news/test.json",
     "model": {
       "type": "sst_classifier",
       "remove_cls": true,
@@ -35,23 +34,22 @@
         "conv_layer_activation": {
           "type": "relu"
         }
-      }
+      },
+      "num_classes": 4
     },
   
     "data_loader": {
-      "type": "simple",
       "batch_size": 64,
       "shuffle": true
     },
   
     "validation_data_loader": {
-      "type": "simple",
       "batch_size": 64,
       "shuffle": true
     },
   
     "trainer": {
-      "num_epochs": 3,
+      "num_epochs": 30,
       "patience": 3,
       "cuda_device": 0,
       "grad_clipping": 5.0,
@@ -62,5 +60,5 @@
     },
     
     "distributed": {"cuda_devices": [0, 1, 2, 3] }
-  }
+}
   

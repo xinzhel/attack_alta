@@ -17,16 +17,18 @@
         "token_embedders": {
           "tokens": {
             "type": "embedding",
+            "pretrained_file": "https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M.vec.zip",
             "embedding_dim": 300,
-            "trainable": true
+            "trainable": false
           }
         }
       },
       
       "seq2vec_encoder": {
-        "type": "self_attention", 
-        "embedding_dim": 300,
-        "num_heads": 5
+        "type": "lstm", 
+        "input_size": 300,
+        "hidden_size": 512,
+        "num_layers": 2
       },
       "num_labels": 4
     },

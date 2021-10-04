@@ -56,6 +56,8 @@
       "optimizer": {
         "type": "adam"
       }
-    }
+    },
+    
+    "distributed": {"cuda_devices": [0, 1, 2, 3] }
 }
   

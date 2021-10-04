@@ -285,7 +285,7 @@ class UniversalAttack():
             blacklist=List[Any],
             first_cls = False,
             num_epoch: int =1,
-            patient: int = 10,
+            patient: int = 3,
             mode = ''
         ) : 
 
@@ -315,8 +315,6 @@ class UniversalAttack():
                 self.invalid_replacement_indices.append(idx)
         
         
-        
-        
         # initialize log for output
         log_trigger_tokens = [] 
         metrics_lst = [] 
@@ -342,7 +340,7 @@ class UniversalAttack():
         
         # sample batches, update the triggers, and repeat
         idx_for_best = 0
-        worst_accuracy = 1
+        best_asr = 1 # best attack sucess rate
         idx_so_far = 0
         
         for epoch in range(num_epoch):
@@ -379,8 +377,8 @@ class UniversalAttack():
                                         target_label=target_label_id)
                             
             # if accuracy is worse
-            if pertubated_accuracy <= worst_accuracy: 
-                worst_accuracy = pertubated_accuracy
+            if pertubated_accuracy > best_asr: 
+                best_asr = pertubated_accuracy
                 idx_for_best = idx_so_far
             idx_so_far += 1
 
@@ -423,29 +421,29 @@ def prepend_batch(instances, trigger_tokens=None, vocab=None, task=None, tokeniz
     return instances_with_triggers
 
 def prepend_instance(instance, trigger_tokens, vocab, task=None, tokenizer=None):
-
+    instance_copy = deepcopy(instance)
     if task is None: # text classification
-        if str(instance.fields['tokens'].tokens[0]) == '[CLS]':
-            instance.fields['tokens'].tokens = [instance.fields['tokens'].tokens[0]] + \
+        if str(instance_copy.fields['tokens'].tokens[0]) == '[CLS]':
+            instance_copy.fields['tokens'].tokens = [instance_copy.fields['tokens'].tokens[0]] + \
                 [Token(token_txt) for token_txt in trigger_tokens] + \
-                instance.fields['tokens'].tokens[1:]
+                instance_copy.fields['tokens'].tokens[1:]
         else:
-            instance.fields['tokens'].tokens = [Token(token_txt) for token_txt in trigger_tokens] + instance.fields['tokens'].tokens
-        instance.fields['tokens'].index(vocab)
-        return instance
+            instance_copy.fields['tokens'].tokens = [Token(token_txt) for token_txt in trigger_tokens] + instance.fields['tokens'].tokens
+        instance_copy.fields['tokens'].index(vocab)
+        return instance_copy
     elif task == 'squad':
-        instance.fields['passage'].tokens = [Token(token_txt) for token_txt in trigger_tokens] + instance.fields['passage'].tokens
-        instance.fields['passage'].index(vocab)
+        instance_copy.fields['passage'].tokens = [Token(token_txt) for token_txt in trigger_tokens] + instance.fields['passage'].tokens
+        instance_copy.fields['passage'].index(vocab)
     
         # add triggers to metadata
-        instance.fields['metadata'].metadata['original_passage'] = ' '.join(trigger_tokens) + " " + instance.fields['metadata']['original_passage']
-        instance.fields['metadata'].metadata['passage_tokens'] = trigger_tokens + instance.fields['metadata'].metadata['passage_tokens']
+        instance_copy.fields['metadata'].metadata['original_passage'] = ' '.join(trigger_tokens) + " " + instance.fields['metadata']['original_passage']
+        instance_copy.fields['metadata'].metadata['passage_tokens'] = trigger_tokens + instance_copy.fields['metadata'].metadata['passage_tokens']
 
         # update passage_offsets
-        passage_tokens = tokenizer.tokenize(instance.fields['metadata']['original_passage'])
+        passage_tokens = tokenizer.tokenize(instance_copy.fields['metadata']['original_passage'])
         passage_offsets = [(token.idx, token.idx + len(token.text)) for token in passage_tokens]
-        instance.fields['metadata'].metadata['token_offsets'] = passage_offsets
-        return instance
+        instance_copy.fields['metadata'].metadata['token_offsets'] = passage_offsets
+        return instance_copy
 
 
 # this is totally same as HotFlip. (I put this method here for myself convenient checking)

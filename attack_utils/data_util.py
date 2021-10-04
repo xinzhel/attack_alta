@@ -44,6 +44,7 @@ def load_data(task, split, batch_size=64, shuffle = False, pretrained_transforme
 
     # construct dataset reader
     if pretrained_transformer:
+        print('We use pretrained transformer tokenizer and indexer.')
         tokenizer = PretrainedTransformerTokenizer(model_name=pretrained_transformer, max_length=max_length)
         indexer = PretrainedTransformerIndexer(model_name=pretrained_transformer) 
     else:
@@ -89,7 +90,7 @@ def load_data(task, split, batch_size=64, shuffle = False, pretrained_transforme
         file_path = f'https://s3-us-west-2.amazonaws.com/allennlp/datasets/squad/squad-{split}-v1.1.json'
         
     elif task == 'ag_news':
-        reader = TextClassificationJsonReader()
+        reader = TextClassificationJsonReader(token_indexers={"tokens": indexer}, tokenizer=tokenizer)
         assert split in ['train', 'test']
         file_path = f"data/ag_news/{split}.json"
 

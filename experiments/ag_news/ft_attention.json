@@ -17,8 +17,9 @@
         "token_embedders": {
           "tokens": {
             "type": "embedding",
+            "pretrained_file": "https://dl.fbaipublicfiles.com/fasttext/vectors-english/crawl-300d-2M.vec.zip",
             "embedding_dim": 300,
-            "trainable": true
+            "trainable": false
           }
         }
       },

@@ -12,6 +12,8 @@ models/
 # tmp
 tmp/
 
+# vscode
+.vscode/
 
 # JetBrains PyCharm IDE
 .idea/
