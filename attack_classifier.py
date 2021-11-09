@@ -134,7 +134,7 @@ def parse_args():
         type=str, 
         default='', 
         # required=True,
-        help=""
+        help="The valid values could be: (1) integrated (2) smooth "
     )
 
     parser.add_argument(
