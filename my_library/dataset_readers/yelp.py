@@ -40,16 +40,12 @@ class YelpDatasetReader(DatasetReader):
     @overrides
     def _read(self, file_path):
 
-        # if not (file_path == 'train') and not(file_path == 'test'):  
-        #     raise ValueError(f"only 'train' and 'test' are valid for 'file_path', but '{file_path}' is given.")
-
         with open('data/yelp_review_polarity_csv/'+file_path+'.csv', "r") as data_file:
             logger.info("Reading instances from lines in file at: %s", file_path)
             if self.distributed:
                 lines = self.shard_iterable(data_file.readlines())
             else:
                 lines = data_file.readlines()
-            
             i = 0
             for line in lines:
                 

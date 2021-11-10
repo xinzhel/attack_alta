@@ -1,19 +1,14 @@
 # data
-data/
+/data/
 
 # model
-checkpoints/
-model/
-models/
-
-# outputs
-/outputs
+/checkpoints/
+/model/
+/models/
 
 # tmp
-tmp/
+/tmp/
 
-# vscode
-.vscode/
 
 # JetBrains PyCharm IDE
 .idea/
@@ -48,8 +43,6 @@ wheels/
 .installed.cfg
 *.egg
 
-# Checkpoints
-checkpoints
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

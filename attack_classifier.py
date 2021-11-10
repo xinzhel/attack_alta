@@ -140,7 +140,7 @@ def parse_args():
     parser.add_argument(
         "--one-example",
         action="store_true",
-        default=True,
+        default=False,
         help="",
     )
 
@@ -149,7 +149,7 @@ def parse_args():
     parser.add_argument(
         "--task", 
         type=str, 
-        default='ag_news',
+        default='bi_sst',
     )
 
     parser.add_argument(
