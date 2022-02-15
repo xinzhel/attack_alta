@@ -1,4 +1,7 @@
+Code for the paper [Exploring the Vulnerability of Natural Language Processing Models via Universal Adversarial Texts](https://alta2021.alta.asn.au/files/ALTW_2021_paper_13.pdf)
+
 We use `allennlp` and the supplement library `allennlp_models` as the boiler plate to organize our experiments. 
+
 
 You should create `outputs`, `models`, `data` folders for saving the attack results, saving trained models and loading datasets.
 
