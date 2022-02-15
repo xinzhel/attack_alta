@@ -3,8 +3,8 @@
 # command line arguments
 cd ../../
 task='bi_sst'
-for model_type in bert_cnn bert_attention; do
-	if [ -e /data/zhanghe/xinzhe/attack/experiments/${task}/${model_type}.json ]; then
+for model_type in cnn; do
+	if [ -e experiments/${task}/${model_type}.json ]; then
 	       	echo "${model_type} exist."
 			train_config_path=experiments/${task}/${model_type}.json
 			serialization_dir=models/${task}/${model_type}

@@ -62,7 +62,12 @@ def attack(task, model_type, trigger_tokens, targeted_class=None, num_epoch=4, v
         
         # no opinion lexicon as triggers
         if task in ['bi_sst', 'imdb', 'amazon', 'yelp']:
-            blacklist = opinion_lexicon.negative() if target_label == '0' else opinion_lexicon.positive()
+            try:
+                blacklist = opinion_lexicon.negative() if target_label == '0' else opinion_lexicon.positive()
+            except:
+                import nltk
+                nltk.download('opinion_lexicon')
+                blacklist = opinion_lexicon.negative() if target_label == '0' else opinion_lexicon.positive()
         else:
             blacklist = []
         
@@ -85,7 +90,7 @@ def attack(task, model_type, trigger_tokens, targeted_class=None, num_epoch=4, v
        
         if one_example:
             
-            log_trigger_tokens, metrics_lst, loss_lst = universal.attack(attack_data_c[0],\
+            log_trigger_tokens, metrics_lst, loss_lst = universal.attack(attack_data_c[2],\
                 test_instances=test_data_c, 
                 init_triggers=trigger_tokens, 
                 target_label=target_label, 
@@ -124,7 +129,7 @@ def parse_args():
     parser.add_argument(
         "--model-type", 
         type=str, 
-        default='lstm',
+        default='cnn',
         # required=True,
         help="path to the victim model"
     )
@@ -132,7 +137,7 @@ def parse_args():
     parser.add_argument(
         "--mode", 
         type=str, 
-        default='', 
+        default='integrated', 
         # required=True,
         help="The valid values could be: (1) integrated (2) smooth "
     )
@@ -140,7 +145,7 @@ def parse_args():
     parser.add_argument(
         "--one-example",
         action="store_true",
-        default=False,
+        default=True,
         help="",
     )
 

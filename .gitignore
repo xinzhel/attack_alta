@@ -1,6 +1,9 @@
 # data
 /data/
 
+/.vscode/
+.vscode/
+
 # model
 /checkpoints/
 /model/
