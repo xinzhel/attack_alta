@@ -87,4 +87,4 @@ class Tqdm:
             **kwargs,
         }
 
-        return _tqdm(*args, **new_kwargs)
+        return _tqdm(*args, **new_kwargs)    

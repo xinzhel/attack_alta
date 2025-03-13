@@ -1,20 +1,14 @@
 
 {
-    "dataset_reader": {
-      "type": "yelp",
-      "token_indexers": {
-        "tokens": {
-          "type": "single_id"
-        }
-      },
-      "tokenizer": {
-        "type": "spacy"
-      },
-      "manual_multiprocess_sharding": true,
-      "manual_distributed_sharding": true
+  "dataset_reader": {
+    "type": "text_classification_json",
+    "token_indexers": {
+      "tokens": {
+        "type": "single_id"
+      }
     },
-    "train_data_path": "train",
-    
+  },
+  "train_data_path": "data/yelp/train.jsonl",
     "model": {
       "type": "sst_classifier",
       "text_field_embedder": {
@@ -54,8 +48,7 @@
       "optimizer": {
         "type": "adam"
       },
-    },
-    "distributed": {"cuda_devices": [0, 1, 2, 3] }
+    }
   
     
   }

@@ -1,4 +1,3 @@
-
 from typing import List, Iterator, Dict, Tuple, Any
 import os
 import glob
@@ -21,16 +20,12 @@ from allennlp.modules.token_embedders.pretrained_transformer_embedder import Pre
 from allennlp.modules.token_embedders import Embedding
 from allennlp.modules.seq2vec_encoders import BertPooler, CnnEncoder, LstmSeq2VecEncoder
 from allennlp.predictors.predictor import Predictor
-from allennlp_models.rc.metrics import SquadEmAndF1
 
 from transformers import BertTokenizer
 
 from my_library.models import MyPooler
 from my_library.models.sst_classifier import SstClassifier
 from my_library.modules import SelfAttentionEncoder
-from allennlp_models.rc import *
-from allennlp_models.classification import *
-
 
 
 # Load the model and its associated vocabulary.

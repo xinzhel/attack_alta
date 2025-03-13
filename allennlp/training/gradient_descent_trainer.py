@@ -18,7 +18,6 @@ from allennlp.common import util as common_util, Tqdm, Lazy
 from allennlp.data.data_loaders.data_loader import DataLoader, TensorDict
 from allennlp.models.model import Model
 from allennlp.training.callbacks import ConsoleLoggerCallback
-from allennlp.training.callbacks.confidence_checks import ConfidenceChecksCallback
 from allennlp.training.callbacks.backward import MixedPrecisionBackwardCallback
 from allennlp.training.checkpointer import Checkpointer
 from allennlp.training.learning_rate_schedulers.learning_rate_scheduler import LearningRateScheduler
@@ -52,7 +51,7 @@ class GradientDescentTrainer(Trainer):
     # Parameters
 
     model : `Model`, required.
-        An AllenNLP model to be optimized. Pytorch Modules can also be optimized if
+        An AllenNlp model to be optimized. Pytorch Modules can also be optimized if
         their `forward` method returns a dictionary with a "loss" key, containing a
         scalar tensor representing the loss function to be optimized.
 
@@ -186,15 +185,6 @@ class GradientDescentTrainer(Trainer):
         When `True`, the [`DEFAULT_CALLBACKS`](#default_callbacks) will be used in
         addition to any other callbacks listed in the `callbacks` parameter.
         When set to `False`, `DEFAULT_CALLBACKS` are not used.
-
-    run_confidence_checks : `bool`, optional (default = `True`)
-        Determines whether model confidence checks, such as
-        [`NormalizationBiasVerification`](../../confidence_checks/normalization_bias_verification/),
-        are run.
-
-    run_sanity_checks : `bool`, optional (default = `True`)
-        This parameter is deprecated. Please use `run_confidence_checks` instead.
-
     """
 
     def __init__(
@@ -221,7 +211,6 @@ class GradientDescentTrainer(Trainer):
         num_gradient_accumulation_steps: int = 1,
         use_amp: bool = False,
         enable_default_callbacks: bool = True,
-        run_confidence_checks: bool = True,
         **kwargs,
     ) -> None:
         super().__init__(
@@ -232,12 +221,6 @@ class GradientDescentTrainer(Trainer):
             world_size=world_size,
         )
 
-        if "run_sanity_checks" in kwargs:
-            warnings.warn(
-                "'run_sanity_checks' is deprecated, please use 'run_confidence_checks' instead.",
-                DeprecationWarning,
-            )
-            run_confidence_checks = kwargs["run_sanity_checks"]
 
         # I am not calling move_to_gpu here, because if the model is
         # not already on the GPU then the optimizer is going to be wrong.
@@ -281,8 +264,7 @@ class GradientDescentTrainer(Trainer):
         self._callbacks = callbacks or []
         default_callbacks = list(DEFAULT_CALLBACKS) if enable_default_callbacks else []
 
-        if run_confidence_checks:
-            default_callbacks.append(ConfidenceChecksCallback)
+
         for callback_cls in default_callbacks:
             for callback in self._callbacks:
                 if callback.__class__ == callback_cls:

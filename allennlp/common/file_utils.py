@@ -95,9 +95,9 @@ class FileLock(_FileLock):
         self._read_only_ok = read_only_ok
 
     @overrides
-    def acquire(self, timeout=None, poll_interval=0.05):
+    def acquire(self, timeout=None, poll_interval=0.05) -> None:
         try:
-            super().acquire(timeout=timeout, poll_intervall=poll_interval)
+            super().acquire(timeout=timeout, poll_interval=poll_interval)
         except OSError as err:
             # OSError could be a lot of different things, but what we're looking
             # for in particular are permission errors, such as:
@@ -849,7 +849,7 @@ class _Meta:
     have a meta JSON file written next to it, which corresponds to an instance
     of this class.
 
-    In older versions of AllenNLP, this meta document just had two fields: 'url' and
+    In older versions of AllenNlp, this meta document just had two fields: 'url' and
     'etag'. The 'url' field is now the more general 'resource' field, but these old
     meta files are still compatible when a `_Meta` is instantiated with the `.from_path()`
     class method.

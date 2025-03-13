@@ -1,2 +1,0 @@
-from allennlp.confidence_checks.verification_base import VerificationBase
-from allennlp.confidence_checks.normalization_bias_verification import NormalizationBiasVerification
